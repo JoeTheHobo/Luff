@@ -1,0 +1,247 @@
+<head>
+	<script src="js/index.js"></script>
+	
+	<style>
+	h1 {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+	#d, #hscore, #avgscore  {
+	position: sticky;
+	margin-top:0px;}
+		table { float: left;}
+		#hideme {
+		width: 500px;
+		background-color: orange;
+		}
+	</style>
+</head>
+<center>
+<body>
+	<center>
+		<button id="hideme" onclick="startgame()"><img src="http://cdn2.ubergizmo.com/wp-content/uploads/2015/07/sonyemoji-640x307.jpg">Start Game</button>
+	</center>
+	<table>
+		<tr>
+			<td>
+				<h1>Streak: </h1>
+			</td>
+			<td>
+				<h1 id="streak">0</h1>
+			</td>
+		</tr>
+	</table>
+	
+				<h1 style="float: right" id="hscore">0</h1>
+				<h1 align="right" id="d"> Highscore: </h1>
+				<h1 style="float: right" id="avgscore">0</h1>
+				<h1 align="right"> AVGscore: </h1>
+
+	
+	<div id="main"><canvas id="lol" height="300"></canvas></div>
+	
+
+	<script>
+		var colors = "#"+((1<<24)*Math.random()|0).toString(16);
+	
+		var msg = ["You are the one millionth customer on our site. We are going to give you 1 million free computers. Please do not leave the website, trust us, we are not downloading/uploading horse porn or virsus onto the computer you are using at the momment. Thanks and stand by as we upload your crap, I mean give you your computers. Thanks!",
+		"USER READ THIS DO NOT EXIT OUT PLEASE If you have ever experienced lag try mosquito spray! it's ninety percent guaranteed  if you are not satisfied with this anti lag sray we offer a 100$ refund! (product cost is between 200$ and 1000$ depending on how rich/dumb you look)",
+		"I know so I told that fat bit.. oh hey girlfriend I didn't see you there.. did you hear anything? oh nothing.. bye!",
+		"game over. PROBABLY CAUSE YOU SUCK! shut up erold he just wasnt born special dont be rude!",
+		"click the dot on the i in highscore 12 times than click start and click the e in streak for a coolio thing ðŸ˜‰",
+		"Liability for our ServicesWHEN PERMITTED BY LAW, GOOGLE, AND GOOGLEâ€™S SUPPLIERS AND DISTRIBUTORS, WILL NOT BE RESPONSIBLE FOR LOST PROFITS, REVENUES, OR DATA, FINANCIAL LOSSES OR INDIRECT, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES.TO THE EXTENT PERMITTED BY LAW, THE TOTAL LIABILITY OF GOOGLE, AND ITS SUPPLIERS AND DISTRIBUTORS, FOR ANY CLAIMS UNDER THESE TERMS, INCLUDING FOR ANY IMPLIED WARRANTIES, IS LIMITED TO THE AMOUNT YOU PAID US TO USE THE SERVICES (OR, IF WE CHOOSE, TO SUPPLYING YOU THE SERVICES AGAIN).IN ALL CASES, GOOGLE, AND ITS SUPPLIERS AND DISTRIBUTORS, WILL NOT BE LIABLE FOR ANY LOSS OR DAMAGE THAT IS NOT REASONABLY FORESEEABLE.",
+		"** Microsoft Warning Alert **\nMalicious Pornographic Spyware/Riskware Detected\nError # 0x80072ee7\nPlease call us immediately at: 0-800-046-5729\nDo not ignore this critical alert.\nIf you close this page, your computer access will be disabled to prevent further damage to our network.\nYour computer has alerted us that it has been infected with a Pornographic Spyware and riskware. The following information is being stolen...\n> Financial Data\n> Facebook Logins\n> Credit Card Details\n> Email Account Logins\n> Photos stored on this computer\nYou must contact us immediately so that our expert engineers can walk you through the removal process over the phone to protect your identity. Please call us within the next 5 minutes to prevent your computer from being disabled or from any information loss.\nToll Free: 0-800-046-5729",
+		location.hostname + " We will hack your computer now."
+		];
+	
+		var avgs = ["Bad","Good","Godlike","Retarded","Interesting","Depressed"];
+		var initsize = 300;
+		var size = initsize;
+		var x;
+		var y;
+		var gameover;
+		var c;
+		var ctx;
+		var hscore = 0;
+		var itame;
+		var scorelist = [];
+		var avgscore;
+		
+		var level = 1;
+		
+		var streak;
+		
+		function startgame() {
+			sfDisplay("h","hideme");
+			c=document.getElementById("lol");
+			ctx=c.getContext("2d");
+			ctx.beginPath();
+			ctx.arc(c.width / 2,c.height / 2,100,0,2*Math.PI);
+			ctx.stroke();
+			ctx.fill();
+			streak = 0;
+			begin();
+		}
+		sfGid("lol").onclick = function() {
+			gameover = true;
+		}
+		
+		
+		
+		function startup() {
+			x = sfRandom(screenX - 300);
+			y = sfRandom(300);
+			printloc();
+		}
+		
+		function begin() {
+			gameover = false;
+			startup();
+			size = initsize;
+			sfGid("lol").style.width = size;
+			repeatall();
+		}
+		
+		function repeatall() {
+			sfGid("streak",streak);
+			var repeatthis = setInterval( function() {
+				sfGid("lol").style.width = size;
+				size--;
+				x += 0.52;
+				y += 0.52;
+				printloc();
+				if (gameover == true) {
+					clearInterval(repeatthis);
+					if (streak == "0") {
+						streak = 0;
+					}
+					
+					
+					clearInterval(itame);
+					itame2();
+					
+					
+					if (streak > level * 5) {
+						level++;
+					}
+					streak++;
+					if (streak > hscore) {
+						hscore = streak;
+					}
+					begin();
+					sfGid("hscore",hscore);
+				}
+				if (size < 0) {
+					clearInterval(repeatthis);
+					if (streak == "0") {
+						streak = 0;
+					}
+					scorelist.push(streak);
+					sfGid("avgscore",Math.floor(sfMath.avg(scorelist)) + "." + avgs[sfRandom(avgs.length) - 1]);
+					streak = "0";
+					xp = 0;
+					clearInterval(itame);
+					itame2();
+					level = 1;
+					lost();
+					
+					
+					
+				}
+				
+				
+				
+				}
+			);
+		}
+		itame2();
+		
+		function lost() {
+			setTimeout(function() {
+			alert(msg[sfRandom(msg.length) - 1]);
+			begin();
+			},100);
+		}
+		
+		function itame2() {
+			itame = setInterval(function() {
+				colors = "#"+((1<<24)*Math.random()|0).toString(16);
+				document.body.style.backgroundColor = colors;
+				
+				ctx.beginPath();
+				ctx.arc(c.width / 2,c.height / 2,100,0,2*Math.PI);
+				colors = "#"+((1<<24)*Math.random()|0).toString(16);
+				ctx.fillStyle = colors;
+				ctx.stroke();
+				ctx.fill();
+			},1000/level);
+		}
+		
+		function printloc() {
+			sfGid("main").style.marginLeft = x + "px";
+			sfGid("main").style.marginTop = y + "px";
+		}
+		
+		
+		
+		//DO NOT LOOK AT THIS PORN
+		var sfMath = {
+			"avg" : function(list) {
+						var sfTotal = 0;
+						var kewli = 0;
+						repeat(function() {
+							sfTotal += list[kewli];
+							kewli++;
+						},list.length);
+						return sfTotal / list.length;
+					},
+			"total" : function(list) {
+						var sfTotal = 0;
+						var kewli = 0;
+						repeat(function() {
+							sfTotal += list[kewli];
+							kewli++;
+						},list.length);
+						return sfTotal;
+					},
+			"highest" : function(list) {
+							var sfHighest = null;
+							var kewli = 0;
+							repeat(function() {
+								if (sfHighest == null) {
+									sfHighest = list[kewli];
+								} else {
+								 if (list[kewli] > sfHighest) {
+									sfHighest = list[kewli];
+								 }
+								}
+								
+								kewli++;
+							},list.length);
+							
+							return sfHighest;
+						},
+			"lowest" : function(list) {
+							var sfHighest = null;
+							var kewli = 0;
+							repeat(function() {
+								if (sfHighest == null) {
+									sfHighest = list[kewli];
+								} else {
+								 if (list[kewli] < sfHighest) {
+									sfHighest = list[kewli];
+								 }
+								}
+								
+								kewli++;
+							},list.length);
+							
+							return sfHighest;
+						}
+		};
+	</script>
+</body>
